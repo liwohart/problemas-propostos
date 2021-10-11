@@ -130,9 +130,7 @@ tabelaDePedidos = forceMatrix . submatrix 1 5 1 6 $ fst <$> tabela
 tabelaDescritiva ::
      Estoque -> Vector (Estoque, Mes, Pedido, Demanda, Custo)
 tabelaDescritiva estoque =
-  V.iterateN
-    6
-    passo
+  V.iterateN 6 passo
     (estoque, 0, pedido, demanda V.! 0, custo (estoque, 0) pedido)
   where
     pedido = tabelaDePedidos ! (estoque `div` 100 + 1, 1)
@@ -151,6 +149,18 @@ tabelaDescritiva estoque =
 roundCentavos :: Custo -> Custo
 roundCentavos = (/ 100) . fromIntegral @Int . round . (* 100)
 
+topoTable espec = do
+  putChar '\n'
+  putStrLn "\t\\begin{table}[ht]"
+  putStrLn "\t\t\\centering"
+  printf "\t\t\\begin{tabular}{%s}" espec
+  putStrLn "\t\t\t\\toprule"
+
+fimTable = do
+  putStrLn "\t\t\t\\bottomrule"
+  putStrLn "\t\t\\end{tabular}"
+  putStrLn "\t\\end{table}"
+
 main :: IO ()
 main = do
   iEstoque <- maybe 1 read . listToMaybe <$> getArgs
@@ -162,11 +172,7 @@ main = do
             roundCentavos $ 2.5 * custoTotal / fromIntegral totalVendido
           faturamento = fromIntegral totalVendido * precoPorProduto
           lucro = faturamento - custoTotal
-      putChar '\n'
-      putStrLn "\t\\begin{table}[ht]"
-      putStrLn "\t\t\\centering"
-      putStrLn "\t\t\\begin{tabular}{lrrrr}"
-      putStrLn "\t\t\t\\toprule"
+      topoTable "lrrrr"
       putStrLn "\t\t\tMês       & Estoque & Demanda & Pedido &       Custo \\\\"
       putStrLn "\t\t\t\\midrule"
       forM_
@@ -175,23 +181,15 @@ main = do
            printf
              "\t\t\t%-9s &  %3d un &  %3d un & %3d un & R\\$ %7.2G \\\\\n"
              (mes m) e d p c)
-      putStrLn "\t\t\t\\bottomrule"
-      putStrLn "\t\t\\end{tabular}"
-      putStrLn "\t\\end{table}"
-      putChar '\n'
-      putStrLn "\t\\begin{table}[ht]"
-      putStrLn "\t\t\\centering"
-      putStrLn "\t\t\\begin{tabular}{lr}"
-      putStrLn "\t\t\t\\toprule"
+      fimTable
+      topoTable "lr"
       printf "\t\t\tTotal vendido   & %9d un    \\\\\n" totalVendido
       printf "\t\t\tCusto total     & R\\$ %8.2G    \\\\\n" custoTotal
       printf "\t\t\tPreço de venda  & R\\$ %8.2G    \\\\\n" precoPorProduto
       printf "\t\t\tFaturamento     & R\\$ %8.2G    \\\\\n" faturamento
       printf "\t\t\tLucro           & R\\$ %8.2G    \\\\\n" lucro
       printf "\t\t\tTaxa de retorno & %13.3f\\%% \\\\\n" (lucro / faturamento * 100)
-      putStrLn "\t\t\t\\bottomrule"
-      putStrLn "\t\t\\end{tabular}"
-      putStrLn "\t\\end{table}"
+      fimTable
       putChar '\n'
     else do
       putStrLn "Modo de uso: ./Main [índice]"
