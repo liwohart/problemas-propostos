@@ -1,0 +1,19 @@
+
+  +-----------+---------+---------+--------+------------+
+  | Mês       | Estoque | Demanda | Pedido |      Custo |
+  +-----------+---------+---------+--------+------------+
+  | Novembro  |  200 un |  400 un | 500 un | R$ 1567.50 |
+  | Dezembro  |  300 un |  200 un |   0 un | R$   20.00 |
+  | Janeiro   |  100 un |  300 un | 500 un | R$ 1567.50 |
+  | Fevereiro |  300 un |  400 un | 100 un | R$  389.50 |
+  | Março     |    0 un |  300 un | 500 un | R$ 1547.50 |
+  | Abril     |  200 un |  200 un |   0 un | R$    0.00 |
+  +-----------+---------+---------+--------+------------+
+
+   Total vendido   :     1800 un
+   Custo total     : R$  5092.00
+   Preço de venda  : R$     7.08
+   Faturamento     : R$ 12744.00
+   Lucro           : R$  7652.00
+   Taxa de retorno :       60.044%
+
